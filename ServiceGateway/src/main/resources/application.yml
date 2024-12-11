@@ -1,0 +1,28 @@
+server:
+  port: 8888
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: ServiceA
+          uri: lb://ServiceAPI
+          predicates:
+            - Path=/ServiceA/api-category
+          filters:
+            - StripPrefix=1
+            - name: AuthorizationFilterFactory
+              args:
+                requiredRole: "Role_User"
+
+      discovery:
+        locator:
+          enabled: true
+  application:
+    name: ServiceGateway
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:9999/eureka
+
+
